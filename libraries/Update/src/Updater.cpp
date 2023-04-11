@@ -105,7 +105,7 @@ bool UpdateClass::rollBack(){
     return _partitionIsBootable(partition) && !esp_ota_set_boot_partition(partition);
 }
 
-bool UpdateClass::begin(size_t size, int command, int ledPin, uint8_t ledOn, const char *label) {
+bool UpdateClass::begin(uint8_t* buffer, size_t size, int command, int ledPin, uint8_t ledOn, const char *label) {
     if(_size > 0){
         log_w("already running");
         return false;
@@ -159,11 +159,7 @@ bool UpdateClass::begin(size_t size, int command, int ledPin, uint8_t ledOn, con
     }
 
     //initialize
-    _buffer = (uint8_t*)malloc(SPI_FLASH_SEC_SIZE);
-    if(!_buffer){
-        log_e("malloc failed");
-        return false;
-    }
+    _buffer = buffer;
     _size = size;
     _command = command;
     _md5.begin();
